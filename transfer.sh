@@ -1,7 +1,7 @@
 #script for downloading data from tesla to my computer
 
 #im changing things to see it git notices
-
+#changing some more things
 
 #copy mhv data
 scp \
