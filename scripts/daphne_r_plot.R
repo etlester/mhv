@@ -1,0 +1,95 @@
+rm(list=ls())
+
+library(ggplot2)
+###this script is a mess and will crash the computer if run 
+#rewrite this to incorporate a for loop that will plot the images rather
+#than the hard coding she has now
+setwd("~/Documents/Hesselberth_Lab/mhv/data/mhv/norm/")
+
+df1<-read.table('norm.mhv.sample1.mhv.+.txt', col.names=c('chrom', 'start', 'end', 'count','freq'))
+df2<-read.table('norm.mhv.sample2.mhv.-.txt', col.names=c('chrom', 'start', 'end', 'count','freq'))
+df3<-read.table('norm.mhv.sample3.mhv.+.txt', col.names=c('chrom', 'start', 'end', 'count','freq'))
+df4<-read.table('norm.mhv.sample4.mhv.+.txt', col.names=c('chrom', 'start', 'end', 'count','freq'))
+df5<-read.table('norm.mhv.sample5.mhv.+.txt', col.names=c('chrom', 'start', 'end', 'count','freq'))
+df6<-read.table('norm.mhv.sample6.mhv.+.txt', col.names=c('chrom', 'start', 'end', 'count','freq'))
+df7<-read.table('norm.mhv.sample7.mhv.+.txt', col.names=c('chrom', 'start', 'end', 'count','freq'))
+df8<-read.table('norm.mhv.sample8.mhv.+.txt', col.names=c('chrom', 'start', 'end', 'count','freq'))
+
+ggplot(df2, aes(x = start, y = freq)) + geom_line()
+
+
+stop
+
+attach(df1)
+pdf('norm.mhv.sample1.mhv.+.pdf', h=4, w=10)
+plot(freq~start, xlim=c(0, 31357), ylim=c(0, 0.22), pch=19, cex=0.5, type='h')
+axis(side=1, lwd=3)
+axis(side=2, lwd=3)
+box(lwd=3)
+detach(df1)
+dev.off()
+
+attach(df2)
+pdf('norm.mhv.sample2.mhv.+.pdf', h=4, w=10)
+plot(freq~start, xlim=c(0, 31357), ylim=c(0,0.22), pch=19, cex=0.5, type='h')
+axis(side=1, lwd=3)
+axis(side=2, lwd=3)
+box(lwd=3)
+detach(df2)
+dev.off()
+
+attach(df3)
+pdf('norm.mhv.sample3.mhv.+.pdf', h=4, w=10)
+plot(freq~start, xlim=c(0, 31357), ylim=c(0,0.22), pch=19, cex=0.5, type='h')
+axis(side=1, lwd=3)
+axis(side=2, lwd=3)
+box(lwd=3)
+detach(df3)
+dev.off()
+
+attach(df4)
+pdf('norm.mhv.sample4.mhv.+.pdf', h=4, w=10)
+plot(freq~start, xlim=c(0, 31357), ylim=c(0,0.22), pch=19, cex=0.5, type='h')
+axis(side=1, lwd=3)
+axis(side=2, lwd=3)
+box(lwd=3)
+detach(df4)
+dev.off()
+
+attach(df5)
+pdf('norm.mhv.sample5.mhv.+.pdf', h=4, w=10)
+plot(freq~start, xlim=c(0,31357), ylim=c(0,0.22), pch=19, cex=0.5, type='h')
+axis(side=1, lwd=3)
+axis(side=2, lwd=3)
+box(lwd=3)
+detach(df5)
+dev.off()
+
+attach(df6)
+pdf('norm.mhv.sample6.mhv.+.pdf', h=4, w=10)
+plot(freq~start, xlim=c(0,31357), ylim=c(0,0.22), pch=19, cex=0.5, type='h')
+axis(side=1, lwd=3)
+axis(side=2, lwd=3)
+box(lwd=3)
+detach(df6)
+dev.off()
+
+attach(df7)
+pdf('norm.mhv.sample7.mhv.+.pdf', h=4, w=10)
+plot(freq~start, xlim=c(0,31357), ylim=c(0,0.22), pch=19, cex=0.5, type='h')
+axis(side=1, lwd=3)
+axis(side=2, lwd=3)
+box(lwd=3)
+detach(df7)
+dev.off()
+
+attach(df8)
+pdf('norm.mhv.sample8.mhv.+.pdf', h=4, w=10)
+plot(freq~start, xlim=c(0,31357), ylim=c(0,0.22), pch=19, cex=0.5, type='h')
+axis(side=1, lwd=3)
+axis(side=2, lwd=3)
+box(lwd=3)
+detach(df8)
+dev.off()
+
+q('no')

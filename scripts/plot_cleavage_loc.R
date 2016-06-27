@@ -1,0 +1,69 @@
+
+
+
+rm(list=ls())
+
+library(ggplot2)
+library(readr)
+
+
+#while loop to load all + strand bedgraph samples
+setwd("~/Documents/Hesselberth_Lab/mhv/data")
+sample_type = "mm28S" #sample types: mhv, mm18S, mm28S
+nsamples = 8
+i <- 1
+while(i <= nsamples){
+#create the object name
+  o <-  paste0(sample_type, i)
+#read the file and name the columns  
+  f <- read_tsv(paste0(sample_type, "/mhv.sample", i,".", sample_type, ".+.bg"), 
+                  col_names = c('condition','start','end', "nreads", "norm", "samplen"))
+
+#change chrom name
+  f$condition <- o
+  f$samplen <- i
+#normalize
+  tot_reads <- sum(f$nreads)
+  f$norm <- f$nreads/tot_reads
+#save tot_reads to mhvUMI_reads*
+  t <- paste0(sample_type, "UMI_reads",i)
+  assign(t,tot_reads)
+#sample num
+  
+#assign the file to the object name
+  assign(o,f) 
+ i <- i+ 1
+}
+
+
+#####need to figure out what Daphne is normalizing to
+#she seems to be hard coding numbers from somewhere
+
+#put all mhv files into a single data frame
+if(sample_type == "mhv"){
+  tdf <- rbind(mhv1, mhv2, mhv3, mhv4, mhv5, mhv6, mhv7, mhv8)
+}
+if(sample_type == "mm18S"){
+  tdf <- rbind(mm18S1, mm18S2, mm18S3, mm18S4, mm18S5, mm18S6, mm18S7, mm18S8)
+}
+if(sample_type == "mm28S"){
+  tdf <- rbind(mm28S1, mm28S2, mm28S3, mm28S4, mm28S5, mm28S6, mm28S7, mm28S8)
+}
+
+
+
+
+
+ggplot(tdf, aes(x = start, y = norm)) + geom_line() + 
+  facet_wrap(~condition, ncol = 2) +
+  labs(x = "Nucleotide", y = paste ('% cDNA reads aligned to', sample_type),
+       title = paste("Cleavage sites in", sample_type, "rRNA"))
+
+#this is eventually how I want data plotted 
+#data frame needs hpi column and set condition types
+#ggplot(tdf, aes(x = start, y = norm, fill = hpi)) + geom_bar(position="dodge") +facet_wrap(~condition, ncol = 1)
+
+
+#clean up envi
+rm(i, nsamples, o, f, sample_type, t, tot_reads)
+
