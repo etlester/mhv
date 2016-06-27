@@ -1,15 +1,16 @@
 
-
-
 rm(list=ls())
 
 library(ggplot2)
 library(readr)
+library(dplyr)
+
+#alter this line to choose what sample type to plot
+sample_type = "mhv" #sample types: mhv, mm18S, mm28S
 
 
 #while loop to load all + strand bedgraph samples
 setwd("~/Documents/Hesselberth_Lab/mhv/data")
-sample_type = "mm28S" #sample types: mhv, mm18S, mm28S
 nsamples = 8
 i <- 1
 while(i <= nsamples){
@@ -59,11 +60,36 @@ ggplot(tdf, aes(x = start, y = norm)) + geom_line() +
   labs(x = "Nucleotide", y = paste ('% cDNA reads aligned to', sample_type),
        title = paste("Cleavage sites in", sample_type, "rRNA"))
 
-#this is eventually how I want data plotted 
-#data frame needs hpi column and set condition types
-#ggplot(tdf, aes(x = start, y = norm, fill = hpi)) + geom_bar(position="dodge") +facet_wrap(~condition, ncol = 1)
+
+##add tag for 9 hpi and 12hpi for color coding
+
+tdf <- tbl_df(tdf)
+
+tdf9 <- filter(tdf, samplen == 1 | samplen == 3 | samplen == 5 | samplen == 7 ) %>%
+  mutate(hpi = 'hpi 9')
+tdf12 <- filter(tdf, samplen == 2 | samplen == 4 | samplen == 6 | samplen == 8 ) %>%
+  mutate(hpi = 'hpi 12')
+
+tdf_hpi <- rbind(tdf9, tdf12)
 
 
-#clean up envi
-rm(i, nsamples, o, f, sample_type, t, tot_reads)
+tdfa <- filter(tdf_hpi, samplen == 1 | samplen == 2) %>%
+  mutate(sample_group = 'WT MHV | WT RNaseL')
+tdfb <- filter(tdf_hpi, samplen == 3 | samplen == 4) %>%
+  mutate(sample_group = 'WT MHV | RNaseL -/-')
+tdfc <- filter(tdf_hpi, samplen == 5 | samplen == 6) %>%
+  mutate(sample_group = 'NS2 Mut | WT RNase L')
+tdfd <- filter(tdf_hpi, samplen == 7 | samplen == 8) %>%
+  mutate(sample_group = 'NS2 Mut | RNaseL -/-')
+
+tdf_hpi <- rbind(tdfa,tdfb,tdfc,tdfd)
+
+
+ggplot(tdf_hpi, aes(x = start, y = norm, col = hpi)) + 
+  geom_bar(position="dodge", stat = 'identity') + 
+  facet_wrap(~sample_group, ncol = 1) +
+  labs(x = 'nucleotide', y = paste('%cDNA reads aligned to', sample_type), 
+       title = paste('Cleavage sites in', sample_type,"RNA" ))
+
+
 
