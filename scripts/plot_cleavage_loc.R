@@ -7,6 +7,22 @@ library(dplyr)
 
 #alter this line to choose what sample type to plot
 sample_type = "mhv" #sample types: mhv, mm18S, mm28S
+lab_cutoff = .01
+
+##y value cutoffs and nudges for labeling plots
+if(sample_type == "mhv"){
+  lab_cutoff <- .01
+  xnudge <- -500
+  ynudge <- .005
+ } else if(sample_type == "mm18S"){
+    lab_cutoff <- .0075
+    xnudge <- 0
+    ynudge <- .01
+ } else {
+  lab_cutoff <- .01
+  xnudge <- 0
+  ynudge <- 0
+  }
 
 
 #while loop to load all + strand bedgraph samples
@@ -58,9 +74,14 @@ if(sample_type == "mm28S"){
 ggplot(tdf, aes(x = start, y = norm)) + geom_line() + 
   facet_wrap(~condition, ncol = 2) +
   labs(x = "Nucleotide", y = paste ('% cDNA reads aligned to', sample_type),
-       title = paste("Cleavage sites in", sample_type, "rRNA"))
+       title = paste("Cleavage sites in", sample_type, "rRNA")) +
+      geom_text(data = subset(tdf, norm > lab_cutoff), 
+                aes(start, norm, label = start, alpha = .7),
+                nudge_x = xnudge, nudge_y = ynudge, angle = 45)
 
 
+
+##plot hpi variable in two different color lines
 ##add tag for 9 hpi and 12hpi for color coding
 
 tdf <- tbl_df(tdf)
@@ -72,7 +93,7 @@ tdf12 <- filter(tdf, samplen == 2 | samplen == 4 | samplen == 6 | samplen == 8 )
 
 tdf_hpi <- rbind(tdf9, tdf12)
 
-
+##group sample types for plotting 9 ad 12 hours on top of one another
 tdfa <- filter(tdf_hpi, samplen == 1 | samplen == 2) %>%
   mutate(sample_group = 'WT MHV | WT RNaseL')
 tdfb <- filter(tdf_hpi, samplen == 3 | samplen == 4) %>%
@@ -89,7 +110,10 @@ ggplot(tdf_hpi, aes(x = start, y = norm, col = hpi)) +
   geom_bar(position="dodge", stat = 'identity') + 
   facet_wrap(~sample_group, ncol = 1) +
   labs(x = 'nucleotide', y = paste('%cDNA reads aligned to', sample_type), 
-       title = paste('Cleavage sites in', sample_type,"RNA" ))
+       title = paste('Cleavage sites in', sample_type,"RNA" )) +
+        geom_text(data = subset(tdf_hpi, norm > lab_cutoff), 
+                  aes(start, norm, label = start, alpha = .7),
+                  nudge_x = xnudge, nudge_y = ynudge, angle = 45)
 
 
 
