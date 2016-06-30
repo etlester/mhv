@@ -6,7 +6,7 @@ library(readr)
 library(dplyr)
 
 #alter this line to choose what sample type to plot
-sample_type = "mhv" #sample types: mhv, mm18S, mm28S
+sample_type = "mm18S" #sample types: mhv, mm18S, mm28S
 lab_cutoff = .01
 
 ##y value cutoffs and nudges for labeling plots
@@ -71,12 +71,12 @@ if(sample_type == "mm28S"){
 
 
 
-ggplot(tdf, aes(x = start, y = norm)) + geom_line() + 
+ggplot(tdf, aes(x = end, y = norm)) + geom_line() + 
   facet_wrap(~condition, ncol = 2) +
   labs(x = "Nucleotide", y = paste ('% cDNA reads aligned to', sample_type),
        title = paste("Cleavage sites in", sample_type, "rRNA")) +
       geom_text(data = subset(tdf, norm > lab_cutoff), 
-                aes(start, norm, label = start, alpha = .7),
+                aes(end, norm, label = end, alpha = .7),
                 nudge_x = xnudge, nudge_y = ynudge, angle = 45)
 
 
@@ -106,13 +106,13 @@ tdfd <- filter(tdf_hpi, samplen == 7 | samplen == 8) %>%
 tdf_hpi <- rbind(tdfa,tdfb,tdfc,tdfd)
 
 
-ggplot(tdf_hpi, aes(x = start, y = norm, col = hpi)) + 
+ggplot(tdf_hpi, aes(x = end, y = norm, col = hpi)) + 
   geom_bar(position="dodge", stat = 'identity') + 
   facet_wrap(~sample_group, ncol = 1) +
   labs(x = 'nucleotide', y = paste('%cDNA reads aligned to', sample_type), 
        title = paste('Cleavage sites in', sample_type,"RNA" )) +
         geom_text(data = subset(tdf_hpi, norm > lab_cutoff), 
-                  aes(start, norm, label = start, alpha = .7),
+                  aes(end, norm, label = end, alpha = .7),
                   nudge_x = xnudge, nudge_y = ynudge, angle = 45)
 
 
