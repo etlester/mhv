@@ -7,7 +7,7 @@ library(dplyr)
 #this script will make a histogram of the most common dinucleotide cleavage sites
 #for a sample type
 
-sample_type = "mm28S" #sample types: mhv, mm18S, mm28S
+sample_type = "mhv" #sample types: mhv, mm18S, mm28S
 
 
 
