@@ -7,7 +7,7 @@ library(dplyr)
 #this script will make a histogram of the most common dinucleotide cleavage sites
 #for a sample type
 
-sample_type = "mm18S" #sample types: mhv, mm18S, mm28S
+sample_type = "mm28S" #sample types: mhv, mm18S, mm28S
 
 
 
@@ -164,13 +164,28 @@ tdf_small <- select(tdf, condition, samplen, ns2, rnasel, hpi)
 #remove duplicate rows
 tdf_small <- distinct(tdf_small, condition, samplen, ns2, rnasel, hpi)
 
+final_dinuc_freq_adj$norm_treads <- final_dinuc$norm_treads
+
 df <- left_join(final_dinuc_freq_adj, tdf_small, by = 'samplen')
 df <- df[c('condition','samplen','dinuc','total_reads','count','freq',
-           'freq_norm_reads','Freq_adj_norm_treads','ns2','rnasel','hpi')]
+           'freq_norm_reads','Freq_adj_norm_treads','norm_treads','ns2','rnasel','hpi')]
 names(df) <- c('alignment','samplen','dinuc','total_reads','count_in_reference','dinuc_freq',
-               'freq_norm_reads','freq_adj_norm_treads','ns2','rnasel','hpi')
+               'freq_norm_reads','freq_adj_norm_treads','norm_treads','ns2','rnasel','hpi')
 save(df,file = paste0('/Users/evanlester/Documents/Hesselberth_Lab/mhv/data/',
     sample_type,'/dinuc/', sample_type,'.dinuc_df.RData'))
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
