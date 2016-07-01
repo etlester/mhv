@@ -7,7 +7,9 @@ library(dplyr)
 #this script will make a histogram of the most common dinucleotide cleavage sites
 #for a sample type
 
-sample_type = "mhv" #sample types: mhv, mm18S, mm28S
+sample_type = "mm18S" #sample types: mhv, mm18S, mm28S
+
+
 
 #while loop to load all + strand dinucleotide samples
 setwd("~/Documents/Hesselberth_Lab/mhv/data")
@@ -97,23 +99,78 @@ dinuc_big <- mutate(dinuc_big, freq_norm_reads = total_reads * freq)
 
 #sum the number of freq_norm_reads and divide each dinucleotide by that to get
 #the normalized value, which will be plotted
+final_dinuc_freq_adj <- dinuc_big %>%
+  group_by(samplen) %>%
+  mutate(Freq_adj_norm_treads = freq_norm_reads/sum(freq_norm_reads) * 100)
+
 final_dinuc <- dinuc_big %>%
   group_by(samplen) %>%
-  mutate(norm_treads = freq_norm_reads/sum(freq_norm_reads))
+  mutate(norm_treads = total_reads/sum(total_reads) * 100)
 
-#plot using geom_bar()
-ggplot(final_dinuc, aes(x= dinuc, y = norm_treads)) + 
+
+##order the bars by custom factoring
+dinuc_order <- c('UA','UU','UG','UC','AA','AU','AG','AC',
+                 'GA','GU','GG','GC','CA','CU','CG','CC')
+
+#order dinucleotides
+final_dinuc_freq_adj$dinuc <- factor(final_dinuc_freq_adj$dinuc, order = TRUE,
+                            levels = dinuc_order)
+
+final_dinuc$dinuc <- factor(final_dinuc$dinuc, order = TRUE,
+                            levels = dinuc_order)
+
+
+#plot frequency adjusted data using geom_bar()
+final_dinuc_freq_adj %>%
+  #filter(samplen == 1) %>%
+ggplot(aes(x= dinuc, y = Freq_adj_norm_treads)) + 
 geom_bar(stat = "identity") +
 facet_wrap(~samplen, ncol = 2) +
+  labs(title = paste(sample_type, 'Dinucleotide Cleavage \n dinucleotide frequancy adjusted'),
+       x = 'Dinucleotide',
+       y = '% cDNA Reads \n Normalized to Reference Dinucleotide Frequency') +
+  theme(text = element_text(size=10),
+     axis.text.x = element_text(angle=90, vjust=0)) 
+
+
+##save plot
+ggsave(paste0(
+  '/Users/evanlester/Documents/Hesselberth_Lab/mhv/figures/dinuc_cleavage/freq_adj/',
+  sample_type, '.dinuc_freq_adj.pdf'))
+
+
+#plot non frequency adjusted data using geom_bar()
+#plot frequency adjusted data using geom_bar()
+final_dinuc %>%
+  #filter(samplen == 1) %>%
+  ggplot(aes(x= dinuc, y = norm_treads)) + 
+  geom_bar(stat = "identity") +
+  facet_wrap(~samplen, ncol = 2) +
   labs(title = paste(sample_type, 'Dinucleotide Cleavage'),
        x = 'Dinucleotide',
-       y = 'Cleavage frequency \n normalized to reference dinucleotide frequency')
+       y = '%cDNA Reads') +
+  theme(text = element_text(size=10),
+        axis.text.x = element_text(angle=90, vjust=0)) 
 
 
+ggsave(paste0(
+  '/Users/evanlester/Documents/Hesselberth_Lab/mhv/figures/dinuc_cleavage/non_freq_adj/',
+  sample_type, '.dinuc.pdf')) 
 
 
+#generate giant dataframe containing sample information in addition to dinucleotides
 
+tdf_small <- select(tdf, condition, samplen, ns2, rnasel, hpi)
+#remove duplicate rows
+tdf_small <- distinct(tdf_small, condition, samplen, ns2, rnasel, hpi)
 
+df <- left_join(final_dinuc_freq_adj, tdf_small, by = 'samplen')
+df <- df[c('condition','samplen','dinuc','total_reads','count','freq',
+           'freq_norm_reads','Freq_adj_norm_treads','ns2','rnasel','hpi')]
+names(df) <- c('alignment','samplen','dinuc','total_reads','count_in_reference','dinuc_freq',
+               'freq_norm_reads','freq_adj_norm_treads','ns2','rnasel','hpi')
+save(df,file = paste0('/Users/evanlester/Documents/Hesselberth_Lab/mhv/data/',
+    sample_type,'/dinuc/', sample_type,'.dinuc_df.RData'))
 
 
 
