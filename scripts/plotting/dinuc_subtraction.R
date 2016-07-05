@@ -50,17 +50,33 @@ sub_df <- mutate(sub_df, diff = reads1 - reads2)
 
 #throw out negative values to compare to Daphne's plots
 if(keep_negatives == 0){
-  for(i in 1:nrow(sub_df)){
-    if(sub_df[i,'diff'] < 0){
-      sub_df[i,'diff'] <- 0
-      }
-    }
-  for(i in 1:nrow(sub_df_adj)){
-    if(sub_df_adj[i,'diff_adj'] < 0){
-      sub_df_adj[i,'diff_adj'] <- 0
-    }
+  index <- sub_df$diff < 0
+  sub_df$diff[index] <- 0
+  
+  index <- sub_df_adj$diff_adj < 0
+  sub_df_adj$diff_adj[index] <- 0
   }
-  }
+
+
+#look up table for labeling graphs
+lut <- c("s1s3" = "s1s3 (WT MHV|WT RNaseL|9hpi - WT MHV|RNaseL -/-|9hpi)\n RNaseL activity inhibited by NS2",
+         "s2s4" = "s2s4 (WT MHV|WT RNaseL|12hpi - WT MHV|RNaseL -/-|12hpi)\n RNaseL activity inhibited by NS2",
+         "s3s1" = "s3s1 (WT MHV|RNaseL -/-|9hpi - WT MHV|WT RNaseL|9hpi)\n not RNaseL activity with NS2 present",
+         "s4s2" = "s4s2 (WT MHV|RNaseL -/-|12hpi - WT MHV|WT RNaseL|12hpi)\n not RNaseL activity with NS2 present",
+         "s5s7" = "s5s7 (NS2 Mut|WT RNaseL|9hpi - NS2 Mut|RNaseL -/-|9hpi)\n RNaseL activity",
+         "s6s8" = "s6s8 (NS2 Mut|WT RNaseL|9hpi - NS2 Mut|RNaseL -/-|12hpi)\n RNaseL activity",
+         "s7s5" = "s7s5 (NS2 Mut|RNaseL -/-|9hpi - NS2 Mut|WT RNaseL|9hpi)\n not RNaseL activity",
+         "s8s6" = "s8s6 (NS2 Mut|RNaseL -/-|12hpi - NS2 Mut|WT RNaseL|9hpi)\n not RNaseL activity")
+
+sub_df$sub_pair <- lut[sub_df$sub_pair]
+sub_df_adj$sub_pair <- lut[sub_df_adj$sub_pair]
+
+
+xnudge <- 0
+ynudge <- .7
+t <- theme(text = element_text(size=10),
+          axis.text.x = element_text(angle=90, vjust=0),
+          strip.text.x = element_text(size = 9))
 
 
 #plot frequency adjusted data using geom_bar()
@@ -68,15 +84,18 @@ sub_df_adj %>%
   ggplot(aes(x= dinuc1, y = diff_adj)) + 
   geom_bar(stat = "identity") +
   facet_wrap(~sub_pair, ncol = 2) +
-  labs(title = paste(sample_type, 'Dinucleotide Subtraction \n dinucleotide frequancy adjusted'),
-       x = 'Dinucleotide Pair',
-       y = 'Difference in % cDNA Reads \n Normalized to Reference Dinucleotide Frequency') +
-  theme(text = element_text(size=10),
-        axis.text.x = element_text(angle=90, vjust=0)) 
+  labs(title = paste(sample_type, 'Dinucleotide Subtraction (Dinucleotide Frequancy Adjusted)'),
+      x = 'Dinucleotide Pair',
+      y = 'Difference in % cDNA Reads Normalized to Reference Dinucleotide Frequency') +
+  t +
+  geom_text(data = subset(sub_df_adj, diff_adj > 0), 
+                          aes(dinuc1, diff_adj, label = dinuc1),
+                          nudge_x = xnudge, nudge_y = ynudge, angle = 45,
+                          size=3)
 
 ggsave(paste0(
   '/Users/evanlester/Documents/Hesselberth_Lab/mhv/figures/dinuc_cleavage_subtraction/freq_adj/',
-  sample_type, '.dinuc_sub_freq_adj.pdf'))
+  sample_type, '.dinuc_sub_freq_adj.pdf'), width = 10.5, height = 8, units = "in")
 
 
 #plot frequency adjusted data using geom_bar()
@@ -88,15 +107,30 @@ sub_df %>%
   labs(title = paste(sample_type, 'Dinucleotide Subtraction'),
        x = 'Dinucleotide Pair',
        y = 'Difference in % cDNA Reads') +
-  theme(text = element_text(size=10),
-        axis.text.x = element_text(angle=90, vjust=0)) 
+  t +
+  geom_text(data = subset(sub_df, diff > 0), 
+                          aes(dinuc1, diff, label = dinuc1),
+                          nudge_x = xnudge, nudge_y = ynudge, angle = 45,
+                          size=3)
+
+
 
 #save non-freq adj plot
   ggsave(paste0(
     '/Users/evanlester/Documents/Hesselberth_Lab/mhv/figures/dinuc_cleavage_subtraction/non_freq_adj/',
-    sample_type, '.dinuc_sub.pdf'))
+    sample_type, '.dinuc_sub.pdf'), width = 10.5, height = 8, units = "in")
+  
+  
+
+#create ordered list of > 0 difference dinucleotides per condition
+  sub_df_ordered <- sub_df %>%
+    arrange(sample1, desc(diff)) %>%
+    select(sub_pair, dinuc1, diff) 
+
+  
+  sub_df_adj_ordered <- sub_df_adj %>%
+    arrange(sample1, desc(diff_adj)) %>%
+    select(sub_pair, dinuc1, diff_adj)
 
 
-
-
-
+  
