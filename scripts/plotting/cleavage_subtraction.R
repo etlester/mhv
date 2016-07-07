@@ -4,13 +4,14 @@
 rm(list=ls())
 
 library(ggplot2)
+library(dplyr)
 library(readr)
 library(ggrepel)
 
 #alter this to choose alignment type
 #sample types: mhv, mm18S, mm28S
-alignment_type = "mhv" 
-join_type <- "inner" #join type can either be "left" or "inner"
+alignment_type = "mm28S" 
+join_type <- "left" #join type can either be "left" or "inner"
 
 if(alignment_type == 'mhv'){
   label_cutoff <- .003
@@ -165,14 +166,39 @@ sub_df %>%
        x = 'Nuceotide',
        y = 'Difference in % cDNA Reads') +
   t +
-  geom_text_repel (data = subset(sub_df, diff > label_cutoff), 
+  geom_text_repel(data = subset(sub_df, diff > label_cutoff), 
             aes(end, diff, label = paste0(dinuc1, end)), size = 3)
+
+
+#code fragment that can put in superscripts
+##(bquote('Assimilation ('*mu~ 'mol' ~CO[2]~ m^-2~s^-1*')'))
+#link: http://stackoverflow.com/questions/27445452/superscript-and-subscript-axis-labels-in-ggplot2
 
 
 #save subtraction pair plot
 ggsave(paste0(
 '/Users/evanlester/Documents/Hesselberth_Lab/mhv/figures/cleavage_subtraction/', join_type,'_join/',
   alignment_type,'_',join_type, '_sub.pdf'), width = 10.5, height = 8, units = "in")
+
+
+###save sub_df and tdf as a references for the Rmarkdown document
+save(sub_df,file = paste0('/Users/evanlester/Documents/Hesselberth_Lab/mhv/data/',
+                      alignment_type,'/', alignment_type,'.cleavage_subtraction.RData'))
+
+lut <- c('1' = "WT MHV | WT RNAseL | 9hpi",
+         '2' = "WT MHV | WT RNAseL | 12hpi",
+         '3' = "WT MHV | RNaseL -/- | 9hpi",
+         '4' = "WT MHV | RNaseL -/- | 12hpi",
+         '5' = "NS2 Mut | WT RNAseL | 9hpi",
+         '6' = "NS2 Mut | WT RNAseL | 12hpi",
+         '7' = "NS2 Mut | RNaseL -/- | 9hpi",
+         '8' = "NS2 Mut | RNaseL -/- | 12hpi")
+
+tdf$samplen <- lut[tdf$samplen]
+
+save(tdf,file = paste0('/Users/evanlester/Documents/Hesselberth_Lab/mhv/data/',
+                      alignment_type,'/', alignment_type,'.cleavage_location.RData'))
+
 
 
 

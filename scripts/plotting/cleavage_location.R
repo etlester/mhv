@@ -6,7 +6,7 @@ library(readr)
 library(dplyr)
 
 #alter this line to choose what sample type to plot
-sample_type = "mm18S" #sample types: mhv, mm18S, mm28S
+sample_type = "mm28S" #sample types: mhv, mm18S, mm28S
 lab_cutoff = .01
 
 ##y value cutoffs and nudges for labeling plots

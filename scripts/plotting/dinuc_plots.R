@@ -7,7 +7,7 @@ library(dplyr)
 #this script will make a histogram of the most common dinucleotide cleavage sites
 #for a sample type
 
-sample_type = "mhv" #sample types: mhv, mm18S, mm28S
+sample_type = "mm28S" #sample types: mhv, mm18S, mm28S
 
 
 
@@ -112,6 +112,9 @@ final_dinuc <- dinuc_big %>%
 dinuc_order <- c('UA','UU','UG','UC','AA','AU','AG','AC',
                  'GA','GU','GG','GC','CA','CU','CG','CC')
 
+
+
+
 #order dinucleotides
 final_dinuc_freq_adj$dinuc <- factor(final_dinuc_freq_adj$dinuc, order = TRUE,
                             levels = dinuc_order)
@@ -171,6 +174,20 @@ df <- df[c('condition','samplen','dinuc','total_reads','count','freq',
            'freq_norm_reads','Freq_adj_norm_treads','norm_treads','ns2','rnasel','hpi')]
 names(df) <- c('alignment','samplen','dinuc','total_reads','count_in_reference','dinuc_freq',
                'freq_norm_reads','freq_adj_norm_treads','norm_treads','ns2','rnasel','hpi')
+
+
+lut <- c('1' = "WT MHV | WT RNAseL | 9hpi",
+         '2' = "WT MHV | WT RNAseL | 12hpi",
+         '3' = "WT MHV | RNaseL -/- | 9hpi",
+         '4' = "WT MHV | RNaseL -/- | 12hpi",
+         '5' = "NS2 Mut | WT RNAseL | 9hpi",
+         '6' = "NS2 Mut | WT RNAseL | 12hpi",
+         '7' = "NS2 Mut | RNaseL -/- | 9hpi",
+         '8' = "NS2 Mut | RNaseL -/- | 12hpi")
+
+df$samplen <- lut[df$samplen]
+
+
 save(df,file = paste0('/Users/evanlester/Documents/Hesselberth_Lab/mhv/data/',
     sample_type,'/dinuc/', sample_type,'.dinuc_df.RData'))
 

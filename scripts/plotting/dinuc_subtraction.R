@@ -4,13 +4,23 @@ library(ggplot2)
 library(readr)
 library(dplyr)
 
-sample_type = "mm28S" #sample types: mhv, mm18S, mm28S
+sample_type = "mhv" #sample types: mhv, mm18S, mm28S
 keep_negatives <- 0 #1 = keep negative values 
                     #0 = throw out negative values and set them to
 
 load(paste0('/Users/evanlester/Documents/Hesselberth_Lab/mhv/data/',
             sample_type,'/dinuc/', sample_type,'.dinuc_df.RData'))
 
+lut <- c( "WT MHV | WT RNAseL | 9hpi" = '1',
+          "WT MHV | WT RNAseL | 12hpi" = '2',
+         "WT MHV | RNaseL -/- | 9hpi" = '3',
+         "WT MHV | RNaseL -/- | 12hpi" = '4',
+         "NS2 Mut | WT RNAseL | 9hpi"= '5',
+          "NS2 Mut | WT RNAseL | 12hpi" = '6',
+          "NS2 Mut | RNaseL -/- | 9hpi" = '7',
+          "NS2 Mut | RNaseL -/- | 12hpi" = '8')
+
+df$samplen <- lut[df$samplen]
 
 #trim to only the variables you want
 df_small <- select(df, samplen, dinuc, freq_adj_norm_treads, norm_treads)
@@ -133,4 +143,7 @@ sub_df %>%
     select(sub_pair, dinuc1, diff_adj)
 
 
+  
+  save(sub_df_adj,file = paste0('/Users/evanlester/Documents/Hesselberth_Lab/mhv/data/',
+                      sample_type,'/dinuc/', sample_type,'.dinuc_subdf.RData'))
   
