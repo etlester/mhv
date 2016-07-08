@@ -4,19 +4,19 @@ library(ggplot2)
 library(readr)
 library(dplyr)
 
-sample_type = "mhv" #sample types: mhv, mm18S, mm28S
+sample_type = "mm28S" #sample types: mhv, mm18S, mm28S
 keep_negatives <- 0 #1 = keep negative values 
                     #0 = throw out negative values and set them to
 
 load(paste0('/Users/evanlester/Documents/Hesselberth_Lab/mhv/data/',
             sample_type,'/dinuc/', sample_type,'.dinuc_df.RData'))
 
-lut <- c( "WT MHV | WT RNAseL | 9hpi" = '1',
-          "WT MHV | WT RNAseL | 12hpi" = '2',
+lut <- c( "WT MHV | WT RNaseL | 9hpi" = '1',
+          "WT MHV | WT RNaseL | 12hpi" = '2',
          "WT MHV | RNaseL -/- | 9hpi" = '3',
          "WT MHV | RNaseL -/- | 12hpi" = '4',
-         "NS2 Mut | WT RNAseL | 9hpi"= '5',
-          "NS2 Mut | WT RNAseL | 12hpi" = '6',
+         "NS2 Mut | WT RNaseL | 9hpi"= '5',
+          "NS2 Mut | WT RNaseL | 12hpi" = '6',
           "NS2 Mut | RNaseL -/- | 9hpi" = '7',
           "NS2 Mut | RNaseL -/- | 12hpi" = '8')
 

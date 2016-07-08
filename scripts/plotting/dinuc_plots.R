@@ -7,7 +7,7 @@ library(dplyr)
 #this script will make a histogram of the most common dinucleotide cleavage sites
 #for a sample type
 
-sample_type = "mm28S" #sample types: mhv, mm18S, mm28S
+sample_type = "mhv" #sample types: mhv, mm18S, mm28S
 
 
 
@@ -176,12 +176,12 @@ names(df) <- c('alignment','samplen','dinuc','total_reads','count_in_reference',
                'freq_norm_reads','freq_adj_norm_treads','norm_treads','ns2','rnasel','hpi')
 
 
-lut <- c('1' = "WT MHV | WT RNAseL | 9hpi",
-         '2' = "WT MHV | WT RNAseL | 12hpi",
+lut <- c('1' = "WT MHV | WT RNaseL | 9hpi",
+         '2' = "WT MHV | WT RNaseL | 12hpi",
          '3' = "WT MHV | RNaseL -/- | 9hpi",
          '4' = "WT MHV | RNaseL -/- | 12hpi",
-         '5' = "NS2 Mut | WT RNAseL | 9hpi",
-         '6' = "NS2 Mut | WT RNAseL | 12hpi",
+         '5' = "NS2 Mut | WT RNaseL | 9hpi",
+         '6' = "NS2 Mut | WT RNaseL | 12hpi",
          '7' = "NS2 Mut | RNaseL -/- | 9hpi",
          '8' = "NS2 Mut | RNaseL -/- | 12hpi")
 
