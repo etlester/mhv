@@ -185,14 +185,14 @@ ggsave(paste0(
 save(sub_df,file = paste0('/Users/evanlester/Documents/Hesselberth_Lab/mhv/data/',
                       alignment_type,'/', alignment_type,'.cleavage_subtraction.RData'))
 
-lut <- c('1' = "WT MHV | WT RNaseL | 9hpi",
-         '2' = "WT MHV | WT RNaseL | 12hpi",
-         '3' = "WT MHV | RNaseL -/- | 9hpi",
-         '4' = "WT MHV | RNaseL -/- | 12hpi",
-         '5' = "NS2 Mut | WT RNaseL | 9hpi",
-         '6' = "NS2 Mut | WT RNaseL | 12hpi",
-         '7' = "NS2 Mut | RNaseL -/- | 9hpi",
-         '8' = "NS2 Mut | RNaseL -/- | 12hpi")
+lut <- c('1' = "Sample 1 WT MHV | WT RNaseL | 9hpi",
+         '2' = "Sample 2 WT MHV | WT RNaseL | 12hpi",
+         '3' = "Sample 3 WT MHV | RNaseL -/- | 9hpi",
+         '4' = "Sample 4 WT MHV | RNaseL -/- | 12hpi",
+         '5' = "Sample 5 NS2 Mut | WT RNaseL | 9hpi",
+         '6' = "Sample 6 NS2 Mut | WT RNaseL | 12hpi",
+         '7' = "Sample 7 NS2 Mut | RNaseL -/- | 9hpi",
+         '8' = "Sample 8 NS2 Mut | RNaseL -/- | 12hpi")
 
 tdf$samplen <- lut[tdf$samplen]
 

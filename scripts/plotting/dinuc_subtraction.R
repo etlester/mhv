@@ -11,14 +11,14 @@ keep_negatives <- 0 #1 = keep negative values
 load(paste0('/Users/evanlester/Documents/Hesselberth_Lab/mhv/data/',
             sample_type,'/dinuc/', sample_type,'.dinuc_df.RData'))
 
-lut <- c( "WT MHV | WT RNaseL | 9hpi" = '1',
-          "WT MHV | WT RNaseL | 12hpi" = '2',
-         "WT MHV | RNaseL -/- | 9hpi" = '3',
-         "WT MHV | RNaseL -/- | 12hpi" = '4',
-         "NS2 Mut | WT RNaseL | 9hpi"= '5',
-          "NS2 Mut | WT RNaseL | 12hpi" = '6',
-          "NS2 Mut | RNaseL -/- | 9hpi" = '7',
-          "NS2 Mut | RNaseL -/- | 12hpi" = '8')
+lut <- c( "Sample 1 WT MHV | WT RNaseL | 9hpi" = '1',
+          "Sample 2 WT MHV | WT RNaseL | 12hpi" = '2',
+         "Sample 3 WT MHV | RNaseL -/- | 9hpi" = '3',
+         "Sample 4 WT MHV | RNaseL -/- | 12hpi" = '4',
+         "Sample 5 NS2 Mut | WT RNaseL | 9hpi"= '5',
+          "Sample 6 NS2 Mut | WT RNaseL | 12hpi" = '6',
+          "Sample 7 NS2 Mut | RNaseL -/- | 9hpi" = '7',
+          "Sample 8 NS2 Mut | RNaseL -/- | 12hpi" = '8')
 
 df$samplen <- lut[df$samplen]
 
