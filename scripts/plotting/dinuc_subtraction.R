@@ -22,6 +22,7 @@ lut <- c( "Sample 1 WT MHV | WT RNaseL | 9hpi" = '1',
 
 df$samplen <- lut[df$samplen]
 
+
 #trim to only the variables you want
 df_small <- select(df, samplen, dinuc, freq_adj_norm_treads, norm_treads)
 names(df_small) <- c('samplen', 'dinuc', 'freq_adj_reads', 'reads')
